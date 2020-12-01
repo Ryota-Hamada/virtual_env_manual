@@ -1,4 +1,15 @@
 # 環境構築手順書
+
+## バージョン一覧
+|OSS|Ver.|
+|-------|-------|
+|macOS Catalina|10.15.5|
+|PHP|7.3.25|
+|nginx|1.19.5|
+|MySQL|5.7.32|
+|laravel|6.20.5|
+
+
 ## Vagrantの作業ディレクトリを用意する
 以下のコマンドを実行してください。
 `$ mkdir virtual_env_manual`
@@ -8,8 +19,6 @@
 下記のサイトからそれぞれのdmgファイルをダウンロード後、インストールを進めてください。
 [Virtual Box公式](https://www.virtualbox.org/wiki/Download_Old_Builds_6_0)
 **※ Vagrantの最新バージョンがVirtualBoxの最新バージョンに対応していないため、Virtual Boxはver6.0.14をインストールするようにしてください。**
-`OS X host`を選択してください。
-ダウンロードしたdmgファイルの指示にしたがってインストールを実行してください。
 以下のコマンドを実行してVirtualBoxのウィンドウが表示されれば正常にインストールされています。
 `$ virtualbox`
 コマンド実行後は入力を受け付けない状態となるため、 `Control + c` を押してください。
@@ -117,11 +126,8 @@ composer -v
 ```
 
 
-### Laravelアプリケーションのコピー作成
-以下のコマンドを自身の環境に合わせて実行し、Laravelプロジェクトのコピーを vagrant_lessonディレクトリ下に作成します。
-```
-$ cp -r laravel_appディレクトリまでの絶対パス ./
-```
+### Laravelのインストール
+`composer create-project --prefer-dist laravel/laravel laravel6 "6.0"`
 
 
 ### データベースのインストール
@@ -162,7 +168,6 @@ DB_PASSWORD=登録したパスワード
 
 ### Nginxのインストール
 Nginxの最新版をインストールしていきます。
-viエディタを使用して以下のファイルを作成します。
 `$ sudo vi /etc/yum.repos.d/nginx.repo`
 書き込む内容は以下になります。
 ```
@@ -182,14 +187,13 @@ $ nginx -v
 
 
 
-
 ### 設定ファイルの編集
 `$ sudo vi /etc/nginx/conf.d/default.conf`
 編集箇所は以下の通りです。
 ```
   server_name  192.168.33.19; # Vagranfileでコメントを外した箇所のipアドレスを記述してください。
   # ApacheのDocumentRootにあたります
-  root /vagrant/laravel_app/public; # 追記
+  root /vagrant/laravel6/public; # 追記
   index  index.html index.htm index.php; # 追記
 
   #charset koi8-r;
@@ -240,3 +244,27 @@ $ sudo chmod -R 777 storage
 ```
 $ sudo systemctl restart nginx
 $ sudo systemctl start php-fpm
+```
+
+### laravelへログイン機能の実装
+```
+composer require laravel/ui 1.*
+php artisan ui vue --auth
+git clone https://github.com/creationix/nvm.git ~/.nvm
+nvm install stable
+npm install
+npm run dev
+```
+
+**ブラウザでhttp://192.168.33.19が表示できれば完了。**
+
+
+## 環境構築の所感
+今までGIZTECHの流れに沿って学習を進めてきたが今回は自分で調べて実装する箇所があり苦労した。
+エラーが色々な箇所で出ておりつまずいたがよく出てくるエラーについては対処法が身に付いたと感じる。
+
+## 参考サイト
+[Laravel学習帳](https://laraweb.net/tutorial/6792/)
+[ReaDouble(laravel6.*)](https://readouble.com/)
+[Qiita_Markdown記法 サンプル集](https://qiita.com/tbpgr/items/989c6badefff69377da7)
+[Darablog(Vagrantで【nvm】を使用して《node.js》と《npm》を入れる方法)](https://dara-blog.com/node-install-in-vagrant)
