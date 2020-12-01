@@ -283,6 +283,9 @@ npm run dev
 
 ## 参考サイト
 [Laravel学習帳](https://laraweb.net/tutorial/6792/)
+
 [ReaDouble(laravel6.*)](https://readouble.com/)
+
 [Qiita_Markdown記法 サンプル集](https://qiita.com/tbpgr/items/989c6badefff69377da7)
+
 [Darablog(Vagrantで【nvm】を使用して《node.js》と《npm》を入れる方法)](https://dara-blog.com/node-install-in-vagrant)
