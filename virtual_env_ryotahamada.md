@@ -43,12 +43,13 @@ $ brew cask install vagrant
 
 ```shell
 $ vagrant -v
-`
-
+```
 
 ### vagrant boxのダウンロード
 LinuxのCentOSのバージョン7のbox名 `centos/7` を指定して実行。
-`vagrant box add centos/7`
+```shell
+vagrant box add centos/7
+```
 コマンドを実行すると、下記のような選択肢が表示されます。
 ```
 1) hyperv
@@ -74,8 +75,8 @@ the comments in the Vagrantfile as well as documentation on
 ```
 
 ### Vagrantfileの編集
-```shwll
-vi Vagrantfile
+```shell
+$ vi Vagrantfile
 ```
 
 でVagrantfileを編集していきます。
@@ -101,8 +102,8 @@ config.vm.synced_folder "./", "/vagrant", type:"virtualbox"
 今回は vagrant-vbguest というプラグインをインストールします。
 
 ```shell
-vagrant plugin install vagrant-vbguest
-vagrant plugin list
+$ vagrant plugin install vagrant-vbguest
+$ vagrant plugin list
 ```
 
 
@@ -123,7 +124,7 @@ Welcome to your Vagrant-built virtual machine.
 下記のコマンドを実行してください。
 
 ```shell
-sudo yum -y groupinstall "development tools"
+$ sudo yum -y groupinstall "development tools"
 ```
 
 このコマンドを実行することによりgitなどの開発に必要なパッケージを一括でインストールできます。
