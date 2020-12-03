@@ -3,7 +3,8 @@
 ## バージョン一覧
 |OSS|Ver.|
 |-------|-------|
-|macOS Catalina|10.15.5|
+|Linux|3.10.0|
+|centOS|7.9.2009|
 |PHP|7.3.25|
 |nginx|1.19.5|
 |MySQL|5.7.32|
@@ -13,7 +14,9 @@
 ## Vagrantの作業ディレクトリを用意する
 以下のコマンドを実行してください。
 
-`$ mkdir virtual_env_manual`
+```shell
+$ mkdir virtual_env_manual
+```
 
 ## vagrantの導入・設定
 ### VirtualBoxのインストール
@@ -22,7 +25,9 @@
 **※ Vagrantの最新バージョンがVirtualBoxの最新バージョンに対応していないため、Virtual Boxはver6.0.14をインストールするようにしてください。**
 以下のコマンドを実行してVirtualBoxのウィンドウが表示されれば正常にインストールされています。
 
-`$ virtualbox`
+```shell
+$ virtualbox
+```
 
 コマンド実行後は入力を受け付けない状態となるため、 `Control + c` を押してください。
 
@@ -30,11 +35,15 @@
 ### Vagrantのインストール
 下記コマンドでvagrantをインストールしてください。
 
-`$ brew cask install vagrant`
+```shell
+$ brew cask install vagrant
+```
 
 下記コマンドでバージョンの確認ができたら問題ありません。
 
-`$ vagrant -v`
+```shell
+$ vagrant -v
+`
 
 
 ### vagrant boxのダウンロード
@@ -54,8 +63,8 @@ Enter your choice: 3
 `Successfully added box 'centos/7' (v1902.01) for 'virtualbox'!`
 
 `cd vagrant_lesson`で最初に作成したディレクトリ`vagrant_lesson`に移動し,以下のコマンドを実行します。
-```
-vagrant init centos/7
+```shell
+$ vagrant init centos/7
 
 # 実行後問題なければ以下のような文言が表示されます
 A `Vagrantfile` has been placed in this directory. You are now
@@ -65,7 +74,9 @@ the comments in the Vagrantfile as well as documentation on
 ```
 
 ### Vagrantfileの編集
-`vi Vagrantfile`
+```shwll
+vi Vagrantfile
+```
 
 でVagrantfileを編集していきます。
 ファイルの中身が表示されたら `i` を押すと編集が可能になります。
@@ -89,17 +100,16 @@ config.vm.synced_folder "./", "/vagrant", type:"virtualbox"
 ### Vagrant プラグインのインストール
 今回は vagrant-vbguest というプラグインをインストールします。
 
-`vagrant plugin install vagrant-vbguest`
-
-vagrant-vbguestのインストールが完了しているか下記のコマンドを実行して確認してください。
-
-`vagrant plugin list`
+```shell
+vagrant plugin install vagrant-vbguest
+vagrant plugin list
+```
 
 
 ## Vagrantを使用してゲストOSの起動,ログイン
 Vagrantfileがあるディレクトリにて以下のコマンドを実行してください。
-```
-vagrant up
+```shell
+$ vagrant up
 $ vagrant ssh
 ```
 実行後このような表示になればゲストOSへのログインができています。
@@ -112,51 +122,55 @@ Welcome to your Vagrant-built virtual machine.
 ### パッケージをインストール
 下記のコマンドを実行してください。
 
-`sudo yum -y groupinstall "development tools"`
+```shell
+sudo yum -y groupinstall "development tools"
+```
 
 このコマンドを実行することによりgitなどの開発に必要なパッケージを一括でインストールできます。
 
 ### PHPをインストール
-```
-sudo yum -y install epel-release wget
-sudo wget http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
-sudo rpm -Uvh remi-release-7.rpm
-sudo yum -y install --enablerepo=remi-php73 php php-pdo php-mysqlnd php-mbstring php-xml php-fpm php-common php-devel php-mysql unzip
-php -v
+```shell
+$ sudo yum -y install epel-release wget
+$ sudo wget http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+$ sudo rpm -Uvh remi-release-7.rpm
+$ sudo yum -y install --enablerepo=remi-php73 php php-pdo php-mysqlnd php-mbstring php-xml php-fpm php-common php-devel php-mysql unzip
+$ php -v
 ```
 phpのバージョンが確認できればインストール完了です。
 
 
 ### composerのインストール
 次にPHPのパッケージ管理ツールであるcomposerをインストールしていきます。
-```
-php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-php composer-setup.php
-php -r "unlink('composer-setup.php');"
+```shell
+$ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+$ php composer-setup.php
+$ php -r "unlink('composer-setup.php');"
 
 # どのディレクトリにいてもcomposerコマンドを使用を使用できるようfileの移動を行います
-sudo mv composer.phar /usr/local/bin/composer
-composer -v
+$ sudo mv composer.phar /usr/local/bin/composer
+$ composer -v
 ```
 
 
 ### Laravelのインストール
-`composer create-project --prefer-dist laravel/laravel laravel6 "6.0"`
+```shell
+$ composer create-project --prefer-dist laravel/laravel laravel6 "6.0"
+```
 
 
 ### データベースのインストール
 今回インストールするデータベースはMySQLとなります。versionは5.7を使用します。
-```
-sudo wget http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
-sudo rpm -Uvh mysql57-community-release-el7-7.noarch.rpm
-sudo yum install -y mysql-community-server
-mysql --version
+```shell
+$ sudo wget http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
+$ sudo rpm -Uvh mysql57-community-release-el7-7.noarch.rpm
+$ sudo yum install -y mysql-community-server
+$ mysql --version
 ```
 versionの確認ができましたらインストール完了です。
 次にMySQLを起動し接続を行います。
 MySQLにパスワードが設定されているため、パスワードを調べて再設定します。
-```
-sudo cat /var/log/mysqld.log | grep 'temporary password'
+```shell
+$ sudo cat /var/log/mysqld.log | grep 'temporary password'
 # このコマンドを実行したら下記のように表示されたらOKです
 2017-01-01T00:00:00.000000Z 1 [Note] A temporary password is generated for root@localhost: hogehoge
 ```
@@ -170,9 +184,9 @@ Query OKと表示されたら作成は完了となります。
 
 ### .envファイルの編集
 laravel_appディレクトリ下の `.env` ファイルの内容を以下に変更してください。
-```
-cd laravel_app
-vi .env
+```shell
+$ cd laravel_app
+$ vi .env
 ```
 ```
 DB_PASSWORD=
@@ -184,7 +198,9 @@ DB_PASSWORD=登録したパスワード
 
 ### Nginxのインストール
 Nginxの最新版をインストールしていきます。
-`$ sudo vi /etc/yum.repos.d/nginx.repo`
+```shell
+$ sudo vi /etc/yum.repos.d/nginx.repo
+```
 書き込む内容は以下になります。
 ```
 [nginx]
@@ -194,17 +210,21 @@ gpgcheck=0
 enabled=1
 ```
 書き終えたら保存して、以下のコマンドを実行しNginxのインストールを実行します。
-```
+```shell
 $ sudo yum install -y nginx
 $ nginx -v
 ```
 バージョンが確認できたらNginxを起動します。
-`$ sudo systemctl start nginx`
+```shell
+$ sudo systemctl start nginx
+```
 
 
 
 ### 設定ファイルの編集
-`$ sudo vi /etc/nginx/conf.d/default.conf`
+```shell
+$ sudo vi /etc/nginx/conf.d/default.conf
+```
 
 編集箇所は以下の通りです。
 ```
@@ -240,7 +260,9 @@ $ nginx -v
 
 php-fpm の設定ファイルも編集していきます。
 
-`$ sudo vi /etc/php-fpm.d/www.conf`
+```shell
+$ sudo vi /etc/php-fpm.d/www.conf
+```
 
 変更箇所は以下になります。
 ```
@@ -254,24 +276,24 @@ group = apache
 group = nginx
 ```
 下記コマンドにてnginx というユーザーでもログファイルへの書き込みができる権限を付与します。
-```
+```shell
 $ cd /vagrant/laravel_app
 $ sudo chmod -R 777 storage
 ```
 完了したら起動してください。
-```
+```shell
 $ sudo systemctl restart nginx
 $ sudo systemctl start php-fpm
 ```
 
 ### laravelへログイン機能の実装
-```
-composer require laravel/ui 1.*
-php artisan ui vue --auth
-git clone https://github.com/creationix/nvm.git ~/.nvm
-nvm install stable
-npm install
-npm run dev
+```shell
+$ composer require laravel/ui 1.*
+$ php artisan ui vue --auth
+$ git clone https://github.com/creationix/nvm.git ~/.nvm
+$ nvm install stable
+$ npm install
+$ npm run dev
 ```
 
 **ブラウザでhttp://192.168.33.19が表示できれば完了。**
